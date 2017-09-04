@@ -1,3 +1,4 @@
+ï»¿
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
@@ -13,137 +14,137 @@
 #define SCR_ROW 25
 #define SCR_COL 80
 
-//data struct
-//ÔºÏµ
-typedef struct SCHOOL {
-	char name[20];				//ÔºÏµÃû³Æ
-	char person_in_charge[12];	//¸ºÔğÈË
-	char phone[15];				//ÁªÏµºÅÂë
-	struct TEAM* head;			
+	//data struct
+	//é™¢ç³»
+	typedef struct SCHOOL {
+	char name[20];				//é™¢ç³»åç§°
+	char person_in_charge[12];	//è´Ÿè´£äºº
+	char phone[15];				//è”ç³»å·ç 
+	struct TEAM* head;
 	struct SCHOOL* next;
 }school;
-//ÍÅ¶Ó
+//å›¢é˜Ÿ
 typedef struct TEAM {
-	char name[20];				//ÍÅ¶ÓÃû³Æ
-	char person_in_charge[12];	//¸ºÔğÈË
-	int tea_amount;				//½ÌÊÚÈËÊı
-	int ug_amount;				//ÑĞ¾¿ÉúÈËÊı
-	char school[20];			//ËùÊôÔºÏµ
+	char name[20];				//å›¢é˜Ÿåç§°
+	char person_in_charge[12];	//è´Ÿè´£äºº
+	int tea_amount;				//æ•™æˆäººæ•°
+	int ug_amount;				//ç ”ç©¶ç”Ÿäººæ•°
+	char school[20];			//æ‰€å±é™¢ç³»
 	struct TEAM *next;
 	struct SUBJECT *head;
 }team;
-//¿ÎÌâ
+//è¯¾é¢˜
 typedef struct SUBJECT {
-	char ID[15];				//ÏîÄ¿±àºÅ
+	char ID[15];				//é¡¹ç›®ç¼–å·
 	char type;					//range from 1 to 5;
-	char begin_time[8];			//ÆğÊ¼Ê±¼ä
-	float fund;					//¾­·Ñ
-	char person_in_charge[12];	//¸ºÔğÈË
-	char team[30];				//ËùÊôÍÅ¶Ó
-	struct SUBJECT *next;
+	char begin_time[8];			//èµ·å§‹æ—¶é—´
+	float fund;					//ç»è´¹
+	char person_in_charge[12];	//è´Ÿè´£äºº
+	char team[30];				//æ‰€å±å›¢é˜Ÿ
+ 	struct SUBJECT *next;
 }subject;
 
-//ÆÁÄ»´°¿ÚĞÅÏ¢Á´½áµã½áµã½á¹¹
-typedef struct layer_node{
-	char LayerNo;				// µ¯³ö´°¿Ú²ãÊı
-	SMALL_RECT rcArea;			//< µ¯³ö´°¿ÚÇøÓò×ø±ê
-	CHAR_INFO *pContent;		//µ¯³ö´°¿ÚÇøÓò×Ö·ûµ¥ÔªÔ­ĞÅÏ¢´æ´¢»º³åÇø
-	char *pScrAtt;				// µ¯³ö´°¿ÚÇøÓò×Ö·ûµ¥ÔªÔ­ÊôĞÔÖµ´æ´¢»º³åÇø
-	struct layer_node *next;	// Ö¸ÏòÏÂÒ»½áµãµÄÖ¸Õë
+//å±å¹•çª—å£ä¿¡æ¯é“¾ç»“ç‚¹ç»“ç‚¹ç»“æ„
+typedef struct layer_node {
+	char LayerNo;				// å¼¹å‡ºçª—å£å±‚æ•°
+	SMALL_RECT rcArea;			//< å¼¹å‡ºçª—å£åŒºåŸŸåæ ‡
+	CHAR_INFO *pContent;		//å¼¹å‡ºçª—å£åŒºåŸŸå­—ç¬¦å•å…ƒåŸä¿¡æ¯å­˜å‚¨ç¼“å†²åŒº
+	char *pScrAtt;				// å¼¹å‡ºçª—å£åŒºåŸŸå­—ç¬¦å•å…ƒåŸå±æ€§å€¼å­˜å‚¨ç¼“å†²åŒº
+	struct layer_node *next;	// æŒ‡å‘ä¸‹ä¸€ç»“ç‚¹çš„æŒ‡é’ˆ
 } LAYER_NODE;
-//±êÇ©Êø½á¹¹
+//æ ‡ç­¾æŸç»“æ„
 
 typedef struct labe1_bundle {
-	char **ppLabel;        //< ±êÇ©×Ö·û´®Êı×éÊ×µØÖ·
-	COORD *pLoc;           // ±êÇ©¶¨Î»Êı×éÊ×µØÖ·
-	int num;               // ±êÇ©¸öÊı
+	char **ppLabel;        //< æ ‡ç­¾å­—ç¬¦ä¸²æ•°ç»„é¦–åœ°å€
+	COORD *pLoc;           // æ ‡ç­¾å®šä½æ•°ç»„é¦–åœ°å€
+	int num;               // æ ‡ç­¾ä¸ªæ•°
 } LABEL_BUNDLE;
 
-//ÈÈÇø
+//çƒ­åŒº
 typedef struct hot_area {
-	SMALL_RECT *pArea;     /**< ÈÈÇø¶¨Î»Êı×éÊ×µØÖ·*/
-	char *pSort;           /**< ÈÈÇøÀà±ğ(°´¼ü¡¢ÎÄ±¾¿ò¡¢Ñ¡Ïî¿ò)Êı×éÊ×µØÖ·*/
-	char *pTag;            /**< ÈÈÇøĞòºÅÊı×éÊ×µØÖ·*/
-	int num;               /**< ÈÈÇø¸öÊı*/
+	SMALL_RECT *pArea;     /**< çƒ­åŒºå®šä½æ•°ç»„é¦–åœ°å€*/
+	char *pSort;           /**< çƒ­åŒºç±»åˆ«(æŒ‰é”®ã€æ–‡æœ¬æ¡†ã€é€‰é¡¹æ¡†)æ•°ç»„é¦–åœ°å€*/
+	char *pTag;            /**< çƒ­åŒºåºå·æ•°ç»„é¦–åœ°å€*/
+	int num;               /**< çƒ­åŒºä¸ªæ•°*/
 } HOT_AREA;
 
 //claimation
-LAYER_NODE *top_layer=NULL;
-school *sch_top = NULL;		//Ö÷Á´Í·Ö¸Õë
+LAYER_NODE *top_layer = NULL;
+school *sch_top = NULL;		//ä¸»é“¾å¤´æŒ‡é’ˆ
 
-char *sys_name = "¿ÆÑĞÏîÄ¿ĞÅÏ¢¹ÜÀíÏµÍ³";
+char *sys_name = "ç§‘ç ”é¡¹ç›®ä¿¡æ¯ç®¡ç†ç³»ç»Ÿ";
 char *Pschool_info = "school.dat";
 char *Pteam_info = "team.dat";
 char *Psubject_info = "subject.dat";
-//todo ÎÄ¼şÖ¸Õë
+//todo æ–‡ä»¶æŒ‡é’ˆ
 
-//Ö÷²Ëµ¥Ñ¡Ïî
+//ä¸»èœå•é€‰é¡¹
 char* main_menu[] = {
-	"Êı¾İÎ¬»¤(F1)",
-	"Êı¾İ²éÑ¯(F2)",
-	"Êı¾İÍ³¼Æ(F3)",
-	"°ïÖú(F4)"
+	"æ•°æ®ç»´æŠ¤(F1)",
+	"æ•°æ®æŸ¥è¯¢(F2)",
+	"æ•°æ®ç»Ÿè®¡(F3)",
+	"å¸®åŠ©(F4)"
 };
-//ÏÂÀ­²Ëµ¥Ñ¡Ïî
+//ä¸‹æ‹‰èœå•é€‰é¡¹
 char* sub_menu[] = {
-	"[S]ÔºÏµĞÅÏ¢Î¬»¤",
-	"[T]ÍÅ¶ÓĞÅÏ¢Î¬»¤",
-	"[B]ÏîÄ¿ĞÅÏ¢Î¬»¤",
-	"[Z]°´ÔºÏµ¸ºÔğÈË²éÑ¯",
-	"[X]°´ÔºÏµÃû³Æ²éÑ¯",
-	"[C]°´ÍÅ¶ÓÃû³Æ²éÑ¯",
-	"[V]°´½ÌÊ¦ÈËÊı²éÑ¯",
-	"[N]°´ÏîÄ¿±àºÅ²éÑ¯",
-	"[M]°´ÏîÄ¿Ãû³Æ²éÑ¯",
-	"[J]Ê¦Éú±ÈÅÅĞò",
-	"[K]ÏîÄ¿Àà±ğ",
-	"[E]ÖØµãÍÅ¶Ó",
-	"[Q]ÏîÄ¿ÀÏÊ¦±È"
-	//¶îÍâ²éÑ¯todo
+	"[S]é™¢ç³»ä¿¡æ¯ç»´æŠ¤",
+	"[T]å›¢é˜Ÿä¿¡æ¯ç»´æŠ¤",
+	"[B]é¡¹ç›®ä¿¡æ¯ç»´æŠ¤",
+	"[Z]æŒ‰é™¢ç³»è´Ÿè´£äººæŸ¥è¯¢",
+	"[X]æŒ‰é™¢ç³»åç§°æŸ¥è¯¢",
+	"[C]æŒ‰å›¢é˜Ÿåç§°æŸ¥è¯¢",
+	"[V]æŒ‰æ•™å¸ˆäººæ•°æŸ¥è¯¢",
+	"[N]æŒ‰é¡¹ç›®ç¼–å·æŸ¥è¯¢",
+	"[M]æŒ‰é¡¹ç›®åç§°æŸ¥è¯¢",
+	"[J]å¸ˆç”Ÿæ¯”æ’åº",
+	"[K]é¡¹ç›®ç±»åˆ«",
+	"[E]é‡ç‚¹å›¢é˜Ÿ",
+	"[Q]é¡¹ç›®è€å¸ˆæ¯”"
+	//é¢å¤–æŸ¥è¯¢todo
 };
-int sub_menu_count[] = { 3,6,5,0 };			//¸÷ÏÂÀ­²Ëµ¥ÏÂ×Ó²Ëµ¥¸öÊı
-int gi_sel_menu = 1;						//±»Ñ¡ÖĞµÄÖ÷²Ëµ¥ÏîºÅ ³õÊ¼Öµ1
-int gi_sel_sub_menu = 0;					//±»Ñ¡ÖĞµÄ×Ó²Ëµ¥±àºÅ,³õÊ¼Öµ0
-CHAR_INFO *gp_buff_menubar_info = NULL;     //´æ·Å²Ëµ¥ÌõÆÁÄ»Çø×Ö·ûĞÅÏ¢µÄ»º³åÇø
-CHAR_INFO *gp_buff_stateBar_info = NULL;    //´æ·Å×´Ì¬ÌõÆÁÄ»Çø×Ö·ûĞÅÏ¢µÄ»º³åÇø
+int sub_menu_count[] = { 3,6,5,0 };			//å„ä¸‹æ‹‰èœå•ä¸‹å­èœå•ä¸ªæ•°
+int gi_sel_menu = 1;						//è¢«é€‰ä¸­çš„ä¸»èœå•é¡¹å· åˆå§‹å€¼1
+int gi_sel_sub_menu = 0;					//è¢«é€‰ä¸­çš„å­èœå•ç¼–å·,åˆå§‹å€¼0
+CHAR_INFO *gp_buff_menubar_info = NULL;     //å­˜æ”¾èœå•æ¡å±å¹•åŒºå­—ç¬¦ä¿¡æ¯çš„ç¼“å†²åŒº
+CHAR_INFO *gp_buff_stateBar_info = NULL;    //å­˜æ”¾çŠ¶æ€æ¡å±å¹•åŒºå­—ç¬¦ä¿¡æ¯çš„ç¼“å†²åŒº
 
 char * P_scr_att = NULL;
-char *P_sch_code = NULL;					//´æ·ÅÑ§Ôº´úÂëµÄ»º´æÇø
-char *P_team_code = NULL;					//´æ·ÅÍÅ¶Ó´úÂëµÄ»º³åÇø
-char *P_subj_code = NULL;					//´æ·ÅÏîÄ¿´úÂëµÄ»º³åÇø
-char sys_state = '\0';						//±£´æÏµÍ³×´Ì¬µÄ×Ö·û
+char *P_sch_code = NULL;					//å­˜æ”¾å­¦é™¢ä»£ç çš„ç¼“å­˜åŒº
+char *P_team_code = NULL;					//å­˜æ”¾å›¢é˜Ÿä»£ç çš„ç¼“å†²åŒº
+char *P_subj_code = NULL;					//å­˜æ”¾é¡¹ç›®ä»£ç çš„ç¼“å†²åŒº
+char sys_state = '\0';						//ä¿å­˜ç³»ç»ŸçŠ¶æ€çš„å­—ç¬¦
 
-unsigned short school_code_len = 0;			//Ñ§Ôº´úÂë³¤¶È
-unsigned short team_code_len = 0;			//ÍÅ¶Ó´úÂë³¤¶È
-unsigned short subj_code_len = 0;			//ÏîÄ¿´úÂë³¤¶È
+unsigned short school_code_len = 0;			//å­¦é™¢ä»£ç é•¿åº¦
+unsigned short team_code_len = 0;			//å›¢é˜Ÿä»£ç é•¿åº¦
+unsigned short subj_code_len = 0;			//é¡¹ç›®ä»£ç é•¿åº¦
 
-HANDLE std_out;								//±ê×¼Êä³ö¾ä±ú
-HANDLE std_in;								//±ê×¼ÊäÈë¾ä±ú
+HANDLE std_out;								//æ ‡å‡†è¾“å‡ºå¥æŸ„
+HANDLE std_in;								//æ ‡å‡†è¾“å…¥å¥æŸ„
 
-int LodaCode(char *filename, char **PPbuffer);//¼ÓÔØ´úÂë±í
-int CreateList(school** PPhead);			 //´´½¨Á´±í
-void InitInterface(void);					 //³õÊ¼»¯½çÃæ
-void Clear(void);							 //ÇåÆÁ
-void ShowMenu(void);						 //ÏÔÊ¾²Ëµ¥
-void PopMenu(int num);						 //ÏÔÊ¾ÏÂÀ­²Ëµ¥
-void PopPrompt(int num);					 //ÏÔÊ¾µ¯³ö´°¿Ú
+int LodaCode(char *filename, char **PPbuffer);//åŠ è½½ä»£ç è¡¨
+int CreateList(school** PPhead);			 //åˆ›å»ºé“¾è¡¨
+void InitInterface(void);					 //åˆå§‹åŒ–ç•Œé¢
+void Clear(void);							 //æ¸…å±
+void ShowMenu(void);						 //æ˜¾ç¤ºèœå•
+void PopMenu(int num);						 //æ˜¾ç¤ºä¸‹æ‹‰èœå•
+void PopPrompt(int num);					 //æ˜¾ç¤ºå¼¹å‡ºçª—å£
 void PopUp(SMALL_RECT *, WORD, LABEL_BUNDLE*, HOT_AREA*);
-											 //µ¯³ö´°¿ÚĞÅÏ¢Î¬»¤
+//å¼¹å‡ºçª—å£ä¿¡æ¯ç»´æŠ¤
 
-void PopOff(void);							 //¹Ø±Õ¶¥²ã´°¿Ú
-void drawbox(SMALL_RECT *P_area);			 //»æÖÆ±ß¿ò
-void LocSubMenu(int num, SMALL_RECT* P_area);//ÏÂÀ­²Ëµ¥¶¨Î»
-void ShowState(void);						 //ÏÔÊ¾×´Ì¬
-void TagMainMenu(int num);					 //±ê¼Ç±»Ñ¡ÖĞµÄÖ÷Ñ¡µ¥
-void TagSubMenu(int num);					 //±ê¼Ç±»Ñ¡ÖĞµÄÏÂÀ­²Ëµ¥
+void PopOff(void);							 //å…³é—­é¡¶å±‚çª—å£
+void drawbox(SMALL_RECT *P_area);			 //ç»˜åˆ¶è¾¹æ¡†
+void LocSubMenu(int num, SMALL_RECT* P_area);//ä¸‹æ‹‰èœå•å®šä½
+void ShowState(void);						 //æ˜¾ç¤ºçŠ¶æ€
+void TagMainMenu(int num);					 //æ ‡è®°è¢«é€‰ä¸­çš„ä¸»é€‰å•
+void TagSubMenu(int num);					 //æ ‡è®°è¢«é€‰ä¸­çš„ä¸‹æ‹‰èœå•
 int DealConInput(HOT_AREA *phot_area, int *pihot_num);
-											 //¿ØÖÆÌ¨ÊäÈë´¦Àí
+//æ§åˆ¶å°è¾“å…¥å¤„ç†
 void SetHotPoint(HOT_AREA *phot_area, int hot_num);
-											 //ÉèÖÃÈÈÇø
-void RunSys(school **PP_sch);				 //ÏµÍ³¹¦ÄÜÄ£¿éµÄÑ¡ÔñÓëÔËĞĞ
+//è®¾ç½®çƒ­åŒº
+void RunSys(school **PP_sch);				 //ç³»ç»ŸåŠŸèƒ½æ¨¡å—çš„é€‰æ‹©ä¸è¿è¡Œ
 BOOL ExeFunction(int main_menu_num, int sub_menu_num);
-											 //µ÷ÓÃ¹¦ÄÜÄ£¿é
-void CloseSys(school *P_sch);				 //¹Ø±ÕÏµÍ³
+//è°ƒç”¨åŠŸèƒ½æ¨¡å—
+void CloseSys(school *P_sch);				 //å…³é—­ç³»ç»Ÿ
 
 
 BOOL LoadData(void);
@@ -151,10 +152,21 @@ BOOL SaveData(void);
 BOOL ExitSys(void);
 BOOL HELP(void);
 BOOL ABOUT(void);
-BOOL MaintainSchool(void);					 //Î¬»¤ÔºÏµĞÅÏ¢
-BOOL MaintainTeam(void);					 //Î¬»¤ÍÅÌåĞÅÏ¢
-BOOL MaintainSubject(void);					 //Î¬»¤ÏîÄ¿ĞÅÏ¢
+BOOL MaintainSchool(void);					 //ç»´æŠ¤é™¢ç³»ä¿¡æ¯
+BOOL MaintainTeam(void);					 //ç»´æŠ¤å›¢ä½“ä¿¡æ¯
+BOOL MaintainSubject(void);					 //ç»´æŠ¤é¡¹ç›®ä¿¡æ¯
 
 
 
-
+/*Â© 2017 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+API
+Training
+Shop
+Blog
+About*/
