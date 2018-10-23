@@ -275,7 +275,8 @@ int CreatList(SCHOOL_NODE **phead)
 */
 void InitInterface()
 {
-	WORD att = FOREGROUND_INTENSITY|BACKGROUND_BLUE;  /*白色前景和绿色背景*/
+	WORD att = FOREGROUND_INTENSITY
+| FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;/*白色前景和绿色背景*/
 
 	SetConsoleTextAttribute(gh_std_out, att);  /*设置控制台屏幕缓冲区字符属性*/
 
@@ -854,10 +855,6 @@ void RunSys(SCHOOL_NODE **phead)
 	}
 }
 
-void PopPrompt(int num)
-{
-
-}
 
 /**
 * 函数名称: PopMenu
@@ -1307,6 +1304,8 @@ int DealInput(HOT_AREA *pHotArea, int *piHot)
 	return iRet;
 }
 
+
+
 void SetHotPoint(HOT_AREA *pHotArea, int iHot)
 {
 	CONSOLE_CURSOR_INFO lpCur;
@@ -1406,6 +1405,7 @@ BOOL ExeFunction(int m, int s)
 */
 BOOL SaveData(void)
 {
+    system("cls");
 	BOOL bRet = TRUE;
 	char *plabel_name[] = { "主菜单项：文件",
 		"子菜单项：数据保存",
@@ -1429,7 +1429,7 @@ BOOL SaveData(void)
 * 输出参数: 状态参量
 * 返 回 值: 1
 *
-* 调用说明:DealInput	PopOff	PopUp  
+* 调用说明:DealInput	PopOff	PopUp
 */
 BOOL ExitSys(void)
 {
@@ -1781,7 +1781,6 @@ BOOL SaveSysData(SCHOOL_NODE *hd)
 	fclose(pfout);
 
 	pfout = fopen(gp_subject_info_filename, "wb");
-	printf("%p\n", pfout);
 	for (pSchool = hd; pSchool != NULL; pSchool = pSchool->next)
 	{
 		pTeam = pSchool->Thead;
@@ -1928,12 +1927,13 @@ SCHOOL_NODE *SearchPIC(SCHOOL_NODE* hd, char*person)
 
 BOOL QurryTeamName(void)
 {
+    system("cls");
 	char s1[] = "团队";
 	char s2[] = "负责人";
 	char s3[] = "所属学院";
 	char s4[] = "教师总数";
 	char s5[] = "学生总数";
-	system("cls");
+
 	char name[20];
 	printf("请输入团队名称:");
 	scanf("%s", name);
@@ -2009,7 +2009,7 @@ BOOL QurrySubID(void)
 	char s4[] = "负责人;";
 	char s5[] = "所属团队";
 	char s6[] = "起始时间";
-	printf("%-15s%s	%-8s%-8s   %s	%-12s%-30s\n",s1,s2,s6,s3,s4,s5);
+	printf("%-15s%s	%-8s%-8s %-12s%-30s\n",s1,s2,s6,s3,s4,s5);
 	if ((temp = SeekProID(gp_head, ID)) != NULL)
 		printf("%-15s%c	%-8s  %.2f  %-12s%-30s\n", temp->ID, temp->type, temp->begin_time, temp->fund, temp->person_in_charge, temp->team);
 	else printf("\nNot Found!\n");
@@ -2022,10 +2022,10 @@ BOOL QurrySubID(void)
 * 输出参数: 状态参量
 * 返 回 值: TRUE代表查询正常
 *
-* 调用说明:Sear
 */
 BOOL QurryTeamBelong(void)
 {
+    system("cls");
 	printf("输入团队名：");
 	char team[30];
 	scanf("%s", team);
@@ -2141,7 +2141,7 @@ BOOL SeekTeamName(SCHOOL_NODE* hd, char *name)
 * 函数功能: 遍历列表查询项目编号
 * 输入参数: 主链头指针 项目编号
 * 输出参数: 所在项目指针
-* 返 回 值: 
+* 返 回 值:
 *
 * 调用说明:
 */
@@ -2175,7 +2175,7 @@ SUBJECT_NODE* SeekProID(SCHOOL_NODE *hd, char *ID)
 * 函数功能: 匹配团队信息负责人.
 * 输入参数: 主链头指针
 * 输出参数: 所在团队指针
-* 返 回 值: 
+* 返 回 值:
 
 * 调用说明:
 */
@@ -2200,7 +2200,7 @@ TEAM_NODE *MatchTeamName(SCHOOL_NODE*hd, char* name)
 /**
 * 函数名称: FullfillProInfo
 * 函数功能: 填写项目信息
-* 输入参数: w对于项目指针
+* 输入参数: 对于项目指针
 * 输出参数: 无
 * 返 回 值: 无
 *
@@ -2227,7 +2227,7 @@ void FullFillProInfo(SUBJECT_NODE *sub)
 /**
 * 函数名称: DelProInfo
 * 函数功能: 删除课题信息
-* 输入参数: void
+* 输入参数: BOOL
 * 输出参数: 状态参量
 * 返 回 值: TRUE代表查询正常
 *
@@ -2321,14 +2321,26 @@ BOOL ModifyProInfo_2(void)
 	return FALSE;
 
 }
+
+
+/*
+**
+* 函数名称: InsertTeamNode
+* 函数功能: 后进先出插入团队节点
+* 输入参数: 无
+* 输出参数: 无
+* 返 回 值: TRUE代表正常
+*
+*/
 SUBJECT_NODE* MatchProID_2(SCHOOL_NODE*hd, char* id)
 {
 	SCHOOL_NODE* pSchool = hd;
 	TEAM_NODE *pTeam;
 	SUBJECT_NODE *pSubject;
+	//遍历链表查找所需信息
 	while (pSchool != NULL)
 	{
-		
+
 		pTeam = pSchool->Thead;
 		while (pTeam != NULL)
 		{
@@ -2346,6 +2358,16 @@ SUBJECT_NODE* MatchProID_2(SCHOOL_NODE*hd, char* id)
 	return NULL;
 
 }
+
+/*
+**
+* 函数名称: InsertTeamNode
+* 函数功能: 后进先出插入团队节点
+* 输入参数: 无
+* 输出参数: 无
+* 返 回 值: TRUE代表正常
+*
+*/
 BOOL InsertTeamNode(void)
 {
 	system("cls");
@@ -2366,6 +2388,16 @@ BOOL InsertTeamNode(void)
 		printf("\n未找到该院系,请重试.\n");
 	return FALSE;
 }
+
+/*
+**
+* 函数名称: MatchSchoolName
+* 函数功能: 查找对应的团队节点返回该队所在学院节点
+* 输入参数: 主链头指针 团队名
+* 输出参数: pTeam
+* 返 回 值: 找到返回对应学院节点，未找到返回NULL
+*
+*/
 SCHOOL_NODE *MatchSchoolName(SCHOOL_NODE*hd, char * school)
 {
 	SCHOOL_NODE* pSchool = hd;
@@ -2448,6 +2480,16 @@ BOOL DelTeamNode(void)
 	else printf("\n未找到该团队\n");
 	return FALSE;
 }
+
+/*
+**
+* 函数名称: MatchTeamNode_Step_1
+* 函数功能: 查找对应的团队节点返回该团队所在学院节点
+* 输入参数: 主链头指针 团队名
+* 输出参数: pTeam
+* 返 回 值: 找到返回该团队所在学院节点，未找到返回NULL
+*
+*/
 SCHOOL_NODE *MatchTeamNode_Step_1(SCHOOL_NODE* hd, char * team)
 {
 	SCHOOL_NODE *pSchool = hd;
@@ -2465,10 +2507,17 @@ SCHOOL_NODE *MatchTeamNode_Step_1(SCHOOL_NODE* hd, char * team)
 	}
 	return NULL;
 }
-
+/*
+**
+* 函数名称: MatchTeamNode_Step_2
+* 函数功能: 查找对应的团队节点返回该团队节点
+* 输入参数: 主链头指针 团队名
+* 输出参数: pTeam
+* 返 回 值: 找到返回对应节点，未找到返回NULL
+*
+*/
 TEAM_NODE *MatchTeamNode_Step_2(SCHOOL_NODE* hd, char *team)
 {
-	printf("step2 begin\n");
 	TEAM_NODE* pTeam = hd->Thead;
 	while (pTeam != NULL)
 	{
@@ -2537,6 +2586,15 @@ BOOL InsertSchoolNode(void)
 
 }
 
+/**
+* 函数名称: FullFillSchInfo
+* 函数功能: 填写学院信息
+* 输入参数: void
+* 输出参数: 无
+* 返 回 值: 无
+*
+*/
+
 void FullFillSchInfo(SCHOOL_NODE * new_sch)
 {
 	printf("\n请输入院系名:");
@@ -2549,6 +2607,15 @@ void FullFillSchInfo(SCHOOL_NODE * new_sch)
 	scanf("%s", new_sch->phone);
 	getchar();
 }
+
+/**
+* 函数名称: DelSchoolNode
+* 函数功能: 删除学院节点
+* 输入参数: BOOL
+* 输出参数: 状态参量
+* 返 回 值: TRUE代表统计正常
+*
+*/
 BOOL DelSchoolNode(void)
 {
 	char name[20];
@@ -2581,13 +2648,12 @@ BOOL DelSchoolNode(void)
 }
 
 /**
-* 函数名称: SortSchoolInfo_1
-* 函数功能: 后进先出创建学院团队信息链表，进行计算并排序
-* 输入参数: woid
+* 函数名称: SortSchoolInfo_2
+* 函数功能: 按学院师生比对学院信息链表进行排序
+* 输入参数: void
 * 输出参数: 状态参量
 * 返 回 值: TRUE代表查询正常
 *
-* 调用说明:SearchPIC
 */
 void SortSchoolInfo_1(SCH_DATA* hd)
 {
@@ -2622,10 +2688,22 @@ void SortSchoolInfo_1(SCH_DATA* hd)
 	char str4[] = "教师比学生";
 	printf("%s	       %s		%s	%s\n", str1, str2, str3, str4);
 	for (p = hd; p != NULL; p = p->next)
-		printf("%s		%d		%d		%f\n", p->name, p->Sch_prof_total, p->Stu_Amount, p->Pro2Stu);
+		{
+		    if(p->Stu_Amount==0)
+                continue;
+		    printf("%s		%d		%d		%f\n", p->name, p->Sch_prof_total, p->Stu_Amount, p->Pro2Stu);
+        }
 	free(temp);
 	return;
 }
+/**
+* 函数名称: SortSchoolInfo_2
+* 函数功能: 按学院项目数对学院信息链表进行排序
+* 输入参数: void
+* 输出参数: 状态参量
+* 返 回 值: TRUE代表查询正常
+*
+*/
 void SortSchoolInfo_2(SCH_DATA* hd)
 {
 	SCH_DATA *prior, *after, *current, *temp;
@@ -2660,7 +2738,10 @@ void SortSchoolInfo_2(SCH_DATA* hd)
 	char s4[] = "总资金";
 	printf("%-20s%-10s%-10s%s\n", s1, s2, s3, s4);
 	for (p = hd; p != NULL; p = p->next)
-		printf("%-20s%-10d%-10d%-12.2f\n", p->name, p->_973_num, p->_863_num, p->total_fund);;
+		{
+		    if(p->total_fund==0) continue;
+            printf("%-20s%-10d%-10d%-12.2f\n", p->name, p->_973_num, p->_863_num, p->total_fund);
+        }
 }
 void SortTeamInfo_1(TEAM_DATA* hd)
 {
@@ -2698,6 +2779,16 @@ void SortTeamInfo_1(TEAM_DATA* hd)
 	for (i = 0, p = hd; i < 10 && p != NULL; i++, p = p->next)
 		printf("%-30s%-8d		%-12.2f\n", p->name, p->NA_pro, p->t_total_fund);
 }
+
+
+/**
+* 函数名称: SortTeamInfo_2
+* 函数功能: 按团队重点项目数对团队信息链表进行排序
+* 输入参数: voud
+* 输出参数: 状态参量
+* 返 回 值: TRUE代表排序正常
+*
+*/
 void SortTeamInfo_2(TEAM_DATA* hd)
 {
 	TEAM_DATA *prior, *after, *current, *temp;
@@ -2763,6 +2854,15 @@ void StatSchInfo(SCHOOL_NODE* hd)
 		}
 	}
 }
+
+/**
+* 函数名称: statistic_1
+* 函数功能: 统计相关数据按学院师生比对学院信息链表进行排序
+* 输入参数: BOOL
+* 输出参数: 状态参量
+* 返 回 值: TRUE代表统计正常
+*
+*/
 void statistic_1(SCHOOL_NODE*hd)
 {
 
@@ -2830,6 +2930,15 @@ void statistic_1(SCHOOL_NODE*hd)
 	}
 	SortSchoolInfo_1(sdata_hd);
 }
+
+/**
+* 函数名称: statistic_2
+* 函数功能: 统计相关数据按学院项目数对学院信息链表进行排序
+* 输入参数: BOOL
+* 输出参数: 状态参量
+* 返 回 值: TRUE代表统计正常
+*
+*/
 void statistic_2(SCHOOL_NODE*hd)
 {
 	SCH_DATA *sdata_hd = NULL;
@@ -2896,6 +3005,15 @@ void statistic_2(SCHOOL_NODE*hd)
 	}
 	SortSchoolInfo_2(sdata_hd);
 }
+
+/**
+* 函数名称: statistic_3
+* 函数功能: 统计相关数据,按团队重点项目数对团队信息链表进行排序
+* 输入参数: BOOL
+* 输出参数: 状态参量
+* 返 回 值: TRUE代表统计正常
+*
+*/
 void statistic_3(SCHOOL_NODE*hd)
 {
 	SCH_DATA *sdata_hd = NULL;
@@ -2963,6 +3081,16 @@ void statistic_3(SCHOOL_NODE*hd)
 	}
 	SortTeamInfo_1(tdata_hd);
 }
+
+
+/**
+* 函数名称: statistic_1
+* 函数功能: 统计相关数据按学院师生比对学院信息链表进行排序
+* 输入参数: BOOL
+* 输出参数: 状态参量
+* 返 回 值: TRUE代表统计正常
+*
+*/
 void statistic_4(SCHOOL_NODE*hd)
 {
 	SCH_DATA *sdata_hd = NULL;
@@ -3030,6 +3158,15 @@ void statistic_4(SCHOOL_NODE*hd)
 	}
 	SortTeamInfo_2(tdata_hd);
 }
+
+/**
+* 函数名称: ModifySchoolInfo
+* 函数功能: 修改学院信息
+* 输入参数: BOOL
+* 输出参数: 状态参量
+* 返 回 值: TRUE代表查询正常
+*
+*/
 BOOL ModifySchoolInfo()
 {
 	char name[20];

@@ -11,19 +11,23 @@
 #include <time.h>
 #include<stdbool.h>
 
-
 #define SCR_ROW 25             /*屏幕行数*/
 #define SCR_COL 80             /*屏幕列数*/
 
+
+
 //data struct
+
 //院系
 typedef struct school {
+
 	char name[20];				//院系名称
 	char person_in_charge[12];	//负责人
 	char phone[15];				//联系号码
 	struct team* Thead;
 	struct school* next;
 }SCHOOL_NODE;
+
 typedef struct sch_data {
 	char name[20];
 	int Sch_prof_total;
@@ -35,7 +39,9 @@ typedef struct sch_data {
 	float total_fund;
 	struct sch_data* next;
 }SCH_DATA;
+
 //团队
+
 typedef struct team {
 	char name[20];				//团队名称
 	char person_in_charge[12];	//负责人
@@ -45,6 +51,7 @@ typedef struct team {
 	struct team *next;
 	struct subject *Shead;
 }TEAM_NODE;
+
 typedef struct team_data {
 	char name[30];
 	int t_pro_amount;
@@ -54,7 +61,9 @@ typedef struct team_data {
 	int NA_pro;
 	struct team_data* next;
 }TEAM_DATA;
+
 //课题
+
 typedef struct subject {
 	char ID[15];				//项目编号
 	char type;					//range from 1 to 5;
@@ -66,9 +75,13 @@ typedef struct subject {
 }SUBJECT_NODE;
 
 
+
+
+
 /**
 *屏幕窗口信息链结点结点结构
 */
+
 typedef struct layer_node {
 	char LayerNo;            /**< 弹出窗口层数*/
 	SMALL_RECT rcArea;       /**< 弹出窗口区域坐标*/
@@ -77,9 +90,12 @@ typedef struct layer_node {
 	struct layer_node *next; /**< 指向下一结点的指针*/
 } LAYER_NODE;
 
+
+
 /**
 *标签束结构
 */
+
 typedef struct labe1_bundle {
 	char **ppLabel;        /**< 标签字符串数组首地址*/
 	COORD *pLoc;           /**< 标签定位数组首地址*/
@@ -87,8 +103,11 @@ typedef struct labe1_bundle {
 } LABEL_BUNDLE;
 
 /**
+
 *热区结构
+
 */
+
 typedef struct hot_area {
 	SMALL_RECT *pArea;     /**< 热区定位数组首地址*/
 	char *pSort;           /**< 热区类别(按键、文本框、选项框)数组首地址*/
@@ -98,6 +117,7 @@ typedef struct hot_area {
 
 LAYER_NODE *gp_top_layer = NULL;               /*弹出窗口信息链链头*/
 SCHOOL_NODE*gp_head = NULL;                     /*主链头指针*/
+
 
 char *gp_sys_name = "科研信息管理系统";    /*系统名称*/
 char *gp_team_info_filename = "team.dat";        /*学生基本信息数据文件*/
@@ -110,6 +130,8 @@ char *ga_main_menu[] = { "文件(F)",             /*系统主菜单名*/
 "数据统计(S)",
 "帮助(H)"
 };
+
+
 
 char *ga_sub_menu[] = { "[S] 数据保存",          /*系统子菜单名*/
 "[X] 退出    Alt+X",
@@ -128,7 +150,7 @@ char *ga_sub_menu[] = { "[S] 数据保存",          /*系统子菜单名*/
 "[C] 科研项目数",
 "[I] 优秀团队",
 "[T] 项目教师比",
-"[C] 其他",
+"[C] 学院信息概览",
 "[A] 关于..."
 };
 
@@ -137,19 +159,20 @@ int gi_sel_menu = 1;                        /*被选中的主菜单项号,初始为1*/
 int gi_sel_sub_menu = 0;                    /*被选中的子菜单项号,初始为0,表示未选中*/
 
 CHAR_INFO *gp_buff_menubar_info = NULL;     /*存放菜单条屏幕区字符信息的缓冲区*/
-CHAR_INFO *gp_buff_stateBar_info = NULL;    /*存放状态条屏幕区字符信息的缓冲区*/
 
+CHAR_INFO *gp_buff_stateBar_info = NULL;    /*存放状态条屏幕区字符信息的缓冲区*/
 char *gp_scr_att = NULL;    /*存放屏幕上字符单元属性值的缓冲区*/
 char *gp_sub_code = NULL;   /*存放课题代码表的数据缓冲区*/
 char gc_sys_state = '\0';   /*用来保存系统状态的字符*/
-
 unsigned long gul_sub_code_len = 0;    /*课题代码表长度*/
-									   //unsigned long gul_type_code_len = 0;   /*学生类别代码表长度*/
 
 HANDLE gh_std_out;          /*标准输出设备句柄*/
 HANDLE gh_std_in;           /*标准输入设备句柄*/
 
+
+
 int LoadCode(char *filename, char **ppbuffer);  /*代码表加载*/
+
 int CreatList(SCHOOL_NODE **pphead);              /*数据链表初始化*/
 void InitInterface(void);                 /*系统界面初始化*/
 void ClearScreen(void);                         /*清屏*/
@@ -175,6 +198,7 @@ BOOL BackupData(void);         /*备份数据*/
 BOOL RestoreData(void);        /*恢复数据*/
 BOOL ExitSys(void);            /*退出系统*/
 
+
 BOOL MaintainSchInfo(void);
 BOOL MaintainTeamInfo(void);    /*维护学生基本信息*/
 BOOL MaintainSubjectInfo(void); /*维护学生缴费信息*/
@@ -188,14 +212,16 @@ BOOL QurrySubID(void);//查询项目编号
 BOOL QurryTeamBelong(void);//查询所属团队
 
 
-
 BOOL StatPro2Stu(void);//统计教师比学生
 BOOL StatSubjectAcc(void);//统计学院项目数
 BOOL StatESubject(void);//统计优秀项目
 BOOL StatSub2Pro(void);//统计项目比教师
 BOOL Other(void);//显示学院信息
 
+
+
 BOOL About(void);//其他
+
 
 SCHOOL_NODE *SearchPIC(SCHOOL_NODE*, char*);//查找学院负责人
 BOOL SeekSchoolName(SCHOOL_NODE*, char*);//查找学院名
@@ -209,24 +235,27 @@ SCHOOL_NODE *MatchSchoolName(SCHOOL_NODE*hd, char * school);//匹配学院名
 TEAM_NODE *MatchTeamName(SCHOOL_NODE *, char*);//匹配团队名
 
 
+
 void FullFillSchInfo(SCHOOL_NODE*);//填写学院信息
 void FullFillTeamInfo(TEAM_NODE*);//填写团队信息
 void FullFillProInfo(SUBJECT_NODE*);//填写项目信息
 
+
 BOOL DelProInfo(void);//删除项目信息
 BOOL DelTeamNode(void);//删除团队节点
 BOOL DelSchoolNode(void);//删除学院节点
+
 
 BOOL InsertProInfo(void);//插入项目节点
 BOOL InsertTeamNode(void);//插入团队节点
 BOOL ModifyProInfo_2(void);//修改项目信息
 BOOL ModifyTeamInfo(void);//修改学院信息;
 
-
 void SortSchoolInfo_1(SCH_DATA* hd);//教师比学生排序
 void SortSchoolInfo_2(SCH_DATA* hd);//项目数排序
 void SortTeamInfo_1(TEAM_DATA*);//优秀项目数排序
 void SortTeamInfo_2(TEAM_DATA*);//项目比老师排序
+
 
 void StatSchInfo(SCHOOL_NODE * hd);
 void statistic_1(SCHOOL_NODE * hd);
